@@ -61,7 +61,7 @@ class Comment {
             let x = await commentSchema.find({ post: postId })
                 .populate({
                     path: 'user.UserId',
-                    select: { 'name': 1, _id: 0, "image": 1 }
+                    select: { 'name': 1, _id: 0, "image": 1, "_id": 1 }
                 })  // Populate user information
                 // Populate post information
                 .sort({ createdAt: -1 })
@@ -80,15 +80,19 @@ class Comment {
         let conn = await getPool();
 
 
+
         try {
             let comment = await commentSchema.findById(commentId);
 
+
+
             if (comment) {
-                if (comment.user.UserId.toString() !== userId.id.toString()) {
+                if (comment.user.UserId.toString() !== userId.toString()) {
                     return false;
                 }
                 else {
-                    const user = await userSchema.findById(userId.id);
+
+                    const user = await userSchema.findById(userId);
 
                     if (!user) {
                         return false;

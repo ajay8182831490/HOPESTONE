@@ -65,11 +65,19 @@ const findPost = async (postId) => {
 
     }
 }
-const findAllPost = async () => {
+const findAllPost = async (page, limit) => {
     try {
-        return await postModul.findAllPost();
+        return await postModul.findAllPost(page, limit);
     } catch (ex) {
         throw new Error(ex.message);
+
+    }
+}
+const viewUpdate = async (postId, totalViews) => {
+    try {
+        return await postModul.viewUpdate(postId, totalViews);
+    } catch (error) {
+        throw error;
 
     }
 }
@@ -83,4 +91,4 @@ const findAllPost = async () => {
 
 
 
-module.exports = { createPost, updatePost, deletePost, findPost, findAllPost };
+module.exports = { createPost, updatePost, deletePost, findPost, findAllPost, viewUpdate };

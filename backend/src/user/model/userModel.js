@@ -13,7 +13,9 @@ const { Types } = require('mongoose');
 
 const { encryptPassword, getPasswordInfo, verifyPassword } = require("../../../util/password");
 const { getToken } = require('../../../util/util');
+const secretKey = 'XUcgh3267'
 
+const { signAccessToken, signRefreshToken, verifyRefreshToken } = require("../../../Helper/jwtAuth");
 
 const { sendEmail, generateOTP, sendEmailforOtp } = require('../../../util/util');
 
@@ -100,19 +102,18 @@ class User {
 
 
 
-            const data = {
-                user: {
-                    id: result._id
-                }
-            }
 
 
 
 
 
-            let token = await jwt.sign(data, process.env.JWT_SECRET_KEY);
 
-            return { token, result };;
+
+
+            let accesstoken = await signAccessToken(result._id);
+
+
+            return { accesstoken, result };
 
 
 
@@ -297,6 +298,25 @@ class User {
         }
 
     }
+    static async refreshToken(refreshToken) {
+        try {
+            const userid = await verifyRefreshToken(refreshToken);
+
+
+
+
+            const accessToken1 = await signAccessToken(userid);
+            const refreshToken1 = await signRefreshToken(userid);
+
+            return { accessToken1, refreshToken1 };
+
+        } catch (ex) {
+            logError(ex, path.basename(__filename));
+            throw ex;
+
+        }
+    }
+
 }
 
 module.exports = User;

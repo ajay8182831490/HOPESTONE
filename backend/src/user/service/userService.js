@@ -4,8 +4,9 @@ const bcrypt = require('bcrypt')
 const usermodel = require("../model/userModel");
 //const userModel = require('../../../model/userModel');
 const { verifyPassword, encryptPassword } = require('../../../util/password');
-
-
+const getPool = require('../../../util/db');
+const { generateOTP, sendEmailforOtp } = require('../../../util/util');
+const { refeshToken } = require('../controller/userController');
 const addUser = async (name, email, password, image) => {
 
     try {
@@ -59,10 +60,12 @@ const userLogin = async (email, password) => {
             const passwordCmp = await verifyPassword(password, hash);
 
 
+
             if (!passwordCmp) {
                 return passwordCmp;
             }
             else {
+
                 return await usermodel.userLogin(email);
             }
 
@@ -110,6 +113,8 @@ const userUpdatePassword = async (id, data) => {
 
 
         let result = await usermodel.findById(id);
+
+
 
 
         if (!result) {
@@ -191,6 +196,7 @@ const findUserProfile = async (id) => {
 
     try {
         let result = await usermodel.findById(id);
+
         if (!result) {
             return false;
         }
@@ -248,9 +254,20 @@ const deleteAcoount = async (id, password) => {
     }
 
 }
+const refreshToken = async (refeshToken) => {
+    try {
+
+
+        return await usermodel.refreshToken(refeshToken);
+
+    } catch (ex) {
+        throw new Error(ex.message);
+
+    }
+}
 
 
 
 
 
-module.exports = { addUser, userLogin, userUpdate, userUpdatePassword, userResetPassword, resetPassword, findUserProfile, findAllPost, verifyOtp, resendOTP, deleteAcoount }; 
+module.exports = { addUser, userLogin, userUpdate, userUpdatePassword, userResetPassword, resetPassword, findUserProfile, findAllPost, verifyOtp, resendOTP, deleteAcoount, refreshToken }; 

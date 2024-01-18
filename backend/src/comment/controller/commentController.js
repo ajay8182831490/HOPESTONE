@@ -36,18 +36,21 @@ const createComment = async (req, res, next) => {
 
         const { postId } = req.params;
         const { content } = req.body;
-        const userId = req.user.userId;
+
+        console.log(content);
+        console.log(postId);
 
 
 
-        if (!mongoose.Types.ObjectId.isValid(userId)) {
+
+        if (!mongoose.Types.ObjectId.isValid(req.user.userId)) {
             return res.status(400).json({ message: 'Bad Request - Invalid createdBy value' });
         }
         if (!mongoose.Types.ObjectId.isValid(postId)) {
             return res.status(400).json({ message: 'Bad Request - Invalid postId value' });
         }
 
-        let result = await commentService.createComment(content, postId, userId);
+        let result = await commentService.createComment(content, postId, req.user.userId);
         res.status(200).json({ msg: 'comment added successfully' });
 
     } catch (ex) {
@@ -64,6 +67,8 @@ const deleteComment = async (req, res, next) => {
     const commentId = req.params.commentId;
     const userId = req.user.userId;
 
+
+
     logInfo("going to delete the comment", path.basename(__filename), commentId.name);
     try {
 
@@ -73,6 +78,8 @@ const deleteComment = async (req, res, next) => {
         }
 
         let result = await commentService.deleteComment(commentId, userId);
+
+
 
         if (!result) {
             res.status(401).json({ msg: "you are not authorise for delete the comment or comment not found", success: false });
