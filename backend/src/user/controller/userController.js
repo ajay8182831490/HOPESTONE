@@ -123,7 +123,7 @@ const userUpdate = async (req, res, next) => {
 
         if (req.file) {
             let result = await userService.userUpdate(userId, req.body, req.file.filename);
-            console.log(result);
+
             res.status(200).json({ msg: "profile updated successfully", success: true });
 
         }
@@ -150,7 +150,7 @@ const userUpdatePassword = async (req, res, next) => {
     const data = req.body;
     const { userId } = req.user;
 
-    console.log(data, userId);
+
 
 
 
@@ -160,7 +160,7 @@ const userUpdatePassword = async (req, res, next) => {
     try {
 
         let result = await userService.userUpdatePassword(userId, data)
-        console.log(result);
+
 
 
 
@@ -236,7 +236,7 @@ const findUserProfile = async (req, res, next) => {
     try {
         let result = await userService.findUserProfile(req.user.userId);
 
-        console.log(result);
+
 
 
 
