@@ -37,8 +37,6 @@ const createComment = async (req, res, next) => {
         const { postId } = req.params;
         const { content } = req.body;
 
-        console.log(content);
-        console.log(postId);
 
 
 

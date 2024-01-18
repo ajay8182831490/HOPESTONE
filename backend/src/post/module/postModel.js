@@ -125,8 +125,8 @@ class Post {
                     select: { "name": 1 }
                 })
                 .sort({ createdAt: -1 }) // Sorting in descending order based on createdDate
-                .skip((pageNumber - 1) * pageSize) // Skip documents based on the page number
-                .limit(pageSize); // Limit the number of documents per page
+            // .skip((pageNumber - 1) * pageSize) // Skip documents based on the page number
+            // .limit(pageSize); // Limit the number of documents per page
 
             return posts;
 

@@ -112,7 +112,7 @@ const deletePost = async (req, res, next) => {
 
         try {
             if (!mongoose.Types.ObjectId.isValid(postId)) {
-                console.log("Invalid ObjectId");
+
                 return res.status(400).json({ message: 'Bad Request - Invalid postId value' });
             }
             const conn = await getPool();
