@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './config/global.env' });
+require('dotenv').config();
 const path = require('path');
 const getPool = require("../backend/util/db.js");
 

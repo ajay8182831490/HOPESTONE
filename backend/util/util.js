@@ -45,8 +45,8 @@ const transporter = nodemailer.createTransport({
 
 
     auth: {
-        user: process.env.email,
-        pass: process.env.epassword,
+        user: 'ajay8182831490@gmail.com',
+        pass: 'twgy htmx zxkp lgec',
         method: 'login'
     },
     tls: {
@@ -58,7 +58,7 @@ const sendEmail = (email, token) => {
         from: 'ajay8182831490@gmail.com',
         to: email,
         subject: 'reset password',
-        html: `<p>Click on the link for reset password <a href="http://localhost:3000/resetPassword?token=${token}">Reset Password</a>
+        html: `<p>Click on the link for reset password <a href="https://hopestone.onrender.com/resetPassword?token=${token}">Reset Password</a>
 >here</a></p>`
     };
 

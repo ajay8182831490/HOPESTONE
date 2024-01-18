@@ -65,11 +65,13 @@ const userLogin = async (req, res, next) => {
     logInfo("going to login the user by using email", path.basename(__filename), userLogin.name);
 
     const { email, password } = req.body;
+
     //  const data = req.body;
 
 
     try {
-        let result = await userService.userLogin(email, password);
+        let { accesstoken, result } = await userService.userLogin(email, password);
+
 
 
 
@@ -81,7 +83,7 @@ const userLogin = async (req, res, next) => {
             res.status(401).json({ msg: "user not found ", success: false, exist: false });
         }
         else {
-            res.status(201).json({ token: result.token, isVerified: result.result.isVerified, success: true, exist: true });
+            res.status(201).json({ accessToken: accesstoken, isVerified: result.isVerified, success: true, exist: true });
 
         }
 
@@ -111,7 +113,7 @@ const resendOTP = async (req, res, next) => {
 
 const userUpdate = async (req, res, next) => {
     logInfo("going to update  the user information", path.basename(__filename), userUpdate.name);
-    const { id } = req.user.userId;
+    const { userId } = req.user;
 
 
 
@@ -120,13 +122,14 @@ const userUpdate = async (req, res, next) => {
 
 
         if (req.file) {
-            let result = await userService.userUpdate(id, req.body, req.file.filename);
-
+            let result = await userService.userUpdate(userId, req.body, req.file.filename);
+            console.log(result);
             res.status(200).json({ msg: "profile updated successfully", success: true });
 
         }
         else {
-            let result = await userService.userUpdate(id, req.body);
+            let result = await userService.userUpdate(userId, req.body);
+
 
             res.status(200).json({ msg: "profile updated successfully", success: true });
 
@@ -145,7 +148,9 @@ const userUpdatePassword = async (req, res, next) => {
 
     logInfo("going to update password", path.basename(__filename), userUpdatePassword.name);
     const data = req.body;
-    const { id } = req.user.userId;;
+    const { userId } = req.user;
+
+    console.log(data, userId);
 
 
 
@@ -154,7 +159,8 @@ const userUpdatePassword = async (req, res, next) => {
 
     try {
 
-        let result = await userService.userUpdatePassword(id, data)
+        let result = await userService.userUpdatePassword(userId, data)
+        console.log(result);
 
 
 
@@ -225,9 +231,14 @@ const findUserProfile = async (req, res, next) => {
 
 
     logInfo("going to fetch all user information", path.basename(__filename), findUserProfile.name);
-    const { id } = req.user.userId;
+    const { userId } = req.user;
+
     try {
-        let result = await userService.findUserProfile(id);
+        let result = await userService.findUserProfile(req.user.userId);
+
+        console.log(result);
+
+
 
 
 
@@ -248,9 +259,11 @@ const findUserProfile = async (req, res, next) => {
 }
 const findAllPost = async (req, res, next) => {
     logInfo("Going to fetch all post list", path.basename(__filename), findAllPost.name);
+    const { userId } = req.user;
     try {
 
-        let result = await userService.findAllPost(req.user.userId);
+        let result = await userService.findAllPost(userId);
+
         if (!result) {
             res.status(400).json('no post found');
 
@@ -268,9 +281,9 @@ const findAllPost = async (req, res, next) => {
 const deleteAcoount = async (req, res, next) => {
     logInfo("going to delete account ", path.basename(__filename), deleteAcoount.name);
     try {
-        const { id } = req.user.userId;
+        const { userId } = req.user;
         const { password } = req.body;
-        let result = await userService.deleteAcoount(id, password);
+        let result = await userService.deleteAcoount(userId, password);
         if (!result) {
             res.status(400).json({ msg: "enter correct passwod", success: false })
         }
@@ -284,8 +297,23 @@ const deleteAcoount = async (req, res, next) => {
 
     }
 }
+const refeshToken = async (req, res, next) => {
+
+    logInfo("going to generate new refresh token", path.basename(__filename), refeshToken.name);
+    const { refreshToken } = req.body;
+
+
+    try {
+        const { refreshToken1, accessToken1 } = await userService.refreshToken(refreshToken);
+        res.status(200).json({ accessToken1, refreshToken1 });
+    } catch (ex) {
+        logError(ex, path.basename(__filename));
+        res.status(500).json("internal server error");
+
+    }
+}
 
 
 
 
-module.exports = { addUser, userLogin, userUpdate, userUpdatePassword, userResetPassword, resetPassword, findUserProfile, findAllPost, verifyOtp, resendOTP, deleteAcoount };
+module.exports = { addUser, userLogin, userUpdate, userUpdatePassword, userResetPassword, resetPassword, findUserProfile, findAllPost, verifyOtp, resendOTP, deleteAcoount, refeshToken };

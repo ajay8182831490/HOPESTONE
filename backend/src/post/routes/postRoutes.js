@@ -25,6 +25,8 @@ router.patch("/v1/user/post/updatePost/:postId", userAuth, upload.single('images
 
 router.delete("/v1/user/post/deletePost/:postId/", userAuth, postController.deletePost);
 
+router.patch("/v1/post/view/:postId", postController.viewUpdate);
+
 
 // we have need userid as well as all information of post
 

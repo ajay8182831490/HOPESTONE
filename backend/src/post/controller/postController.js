@@ -20,7 +20,7 @@ const createPost = async (req, res, next) => {
         const { title, categories, description } = req.body;
 
 
-        const createdBy = req.user.userId;
+        const createdBy = req.user.userId;;
 
         if (!mongoose.Types.ObjectId.isValid(createdBy)) {
             return res.status(400).json({ message: 'Bad Request - Invalid createdBy value' });
@@ -112,7 +112,7 @@ const deletePost = async (req, res, next) => {
 
         try {
             if (!mongoose.Types.ObjectId.isValid(postId)) {
-
+                console.log("Invalid ObjectId");
                 return res.status(400).json({ message: 'Bad Request - Invalid postId value' });
             }
             const conn = await getPool();
@@ -208,9 +208,9 @@ const findAllPost = async (req, res, next) => {
 
 
 
+            const { page, limit } = req.body
 
-
-            let result = await postService.findAllPost();
+            let result = await postService.findAllPost(page, limit);
 
             if (!result) {
                 res.status(401).json("post not found");
@@ -237,5 +237,20 @@ const findAllPost = async (req, res, next) => {
     }
 
 }
+const viewUpdate = async (req, res, next) => {
+    logInfo("going to update the view value", path.basename(__filename), viewUpdate.name);
+    const { totalViews } = req.body
+    const { postId } = req.params
+    try {
 
-module.exports = { createPost, updatePost, deletePost, findPost, findAllPost };
+        let result = await postService.viewUpdate(postId, totalViews);
+        res.status(200).json({ result });
+
+    } catch (ex) {
+        logError(ex, path.basename(__filename));
+        res.status(500).json("internal server error");
+
+    }
+}
+
+module.exports = { createPost, updatePost, deletePost, findPost, findAllPost, viewUpdate };

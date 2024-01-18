@@ -1,17 +1,18 @@
 
 const { logError } = require('../../../util/logger');
-
+const { getPaginatedData } = require("../../../util/db");
 const path = require('path');
 const userSchema = require('../../../model/user');
 const getPool = require("../../../util/db");
-
+const jwt = require('jsonwebtoken');
 const { Types } = require('mongoose');
 
-
+const { encryptPassword, getPasswordInfo, verifyPassword } = require("../../../util/password");
+const { getToken } = require('../../../util/util');
 const postSchema = require('../../../model/post');
 
 
-
+const { sendEmail } = require('../../../util/util');
 
 
 class Post {
@@ -113,20 +114,38 @@ class Post {
         }
 
     }
-    static async findAllPost() {
+    static async findAllPost(pageNumber = 1, pageSize = 3) {
         try {
             const conn = await getPool();
-            return await postSchema.find().populate({
-                path: 'createdBy',
-                select: { "name": 1 }
-            });
+
+            const posts = await postSchema
+                .find()
+                .populate({
+                    path: 'createdBy',
+                    select: { "name": 1 }
+                })
+                .sort({ createdAt: -1 }) // Sorting in descending order based on createdDate
+                .skip((pageNumber - 1) * pageSize) // Skip documents based on the page number
+                .limit(pageSize); // Limit the number of documents per page
+
+            return posts;
 
         } catch (ex) {
             logError(ex, path.basename(__filename));
             throw new Error(ex.message);
-
         }
+    }
+    static async viewUpdate(postId, totalViews) {
+        try {
+            let conn = await getPool();
 
+            let result = await postSchema.findByIdAndUpdate(postId, { $set: { totalViews: totalViews } }, { new: true }).select("totalViews");
+            return result;
+
+        } catch (ex) {
+            logError(ex, path.basename(__filename));
+            throw new Error(ex.message);
+        }
     }
 
 

@@ -15,6 +15,7 @@ const userController = require("../controller/userController");
 router.post("/v1/signup", upload.single('images'), userController.addUser);
 router.post("/v1/verify", userController.verifyOtp);
 router.post("/v1/resendOTP", userController.resendOTP);
+router.post("/v1/refreshToken", userController.refeshToken);
 
 router.post("/v1/login/", userController.userLogin);
 
