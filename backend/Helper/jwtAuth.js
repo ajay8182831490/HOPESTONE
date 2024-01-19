@@ -7,7 +7,7 @@ module.exports = {
     signAccessToken: (userId) => {
         return new Promise((resolve, reject) => {
             const payload = {}
-            console.log(userId);
+
             const secret = process.env.ACCESS_TOKEN_SECRET
             const options = {
                 expiresIn: '20d',
@@ -36,14 +36,14 @@ module.exports = {
                 return next(createError.Unauthorized(message))
             }
             req.payload = payload
-            console.log(payload);
+
             next()
         })
     },
     signRefreshToken: (userId) => {
         return new Promise((resolve, reject) => {
             const payload = {}
-            console.log(userId);
+
             const secret = process.env.REFRESH_TOKEN_SECRET
             const options = {
                 expiresIn: '1y',
