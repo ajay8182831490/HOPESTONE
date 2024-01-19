@@ -1,8 +1,5 @@
 const JWT = require('jsonwebtoken');
-const getPool = require('../util/db');
-const userSchema = require("../../backend/model/user");
-const { logError } = require('../util/logger');
-const path = require('path');
+
 const { Types } = require('mongoose');
 
 
