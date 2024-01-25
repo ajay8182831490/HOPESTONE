@@ -58,7 +58,7 @@ const sendEmail = (email, token) => {
         from: 'ajay8182831490@gmail.com',
         to: email,
         subject: 'reset password',
-        html: `<p>Click on the link for reset password <a href="https://hopestone.onrender.com/resetPassword/?token=${token}">Reset Password</a>
+        html: `<p>Click on the link for reset password <a href="https://hopestone.netlify.app/resetPassword/?token=${token}">Reset Password</a>
 >here</a></p>`
     };
 
